@@ -1,7 +1,7 @@
 <template>
   <date-range-picker
     :date-range="globalFilters.dates"
-    style="width: 100%;"
+    style="width: 100%; color: black;"
     :locale-data="localeData"
     auto-apply
     @select="changeDates"
@@ -74,3 +74,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+  /deep/ .reportrange-text {
+    border: none;
+    background: none;
+  }
+</style>
