@@ -10,14 +10,14 @@
     <!-- ЛЕВАЯ ЧАСТЬ -->
     <v-col
       :cols="12"
-      :sm="9"
+      :sm="8"
     >
       <topbar-actions />
-      
+
       <div style="float: right;">
         <!-- КНОПКИ ДЕЙСТВИЙ - ОБНОВИТЬ СТАТИСТИКУ -->
         <refresh />
-          
+
         <!-- КНОПКИ ДЕЙСТВИЙ - СТОЛБЦЫ -->
         <div style="float: right;">
           <topbar-cols />
@@ -87,7 +87,7 @@
               </v-list-item>
 
               <v-divider />
-              
+
               <v-list-item
                 dense
                 @click="$store.dispatch('cabs/setSpecificFilter', {filter: 'accountsStatuses', data: ['ACTIVE']});"
@@ -96,7 +96,7 @@
                   {{ $t('adsmanager.cabs.filters.underActiveAccounts') }}
                 </v-list-item-title>
               </v-list-item>
-              
+
               <v-list-item
                 dense
                 @click="$store.dispatch('cabs/setSpecificFilter', {filter: 'cabsStatuses', data: [{text: 'ACTIVE', color: 'success', value: 1}]});"
@@ -171,19 +171,19 @@
     <!-- ПРАВАЯ ЧАСТЬ -->
     <v-col
       cols="12"
-      sm="3"
+      sm="4"
     >
       <v-row>
         <!-- ФИЛЬТР ПО ДАТЕ -->
         <v-col
           cols="12"
-          sm="12"
+          sm="6"
         >
           <filters-date />
         </v-col>
 
         <!-- ПОИСК ПО НАЗВАНИЮ -->
-        <!-- <v-col
+        <v-col
           cols="12"
           sm="6"
         >
@@ -195,10 +195,9 @@
             single-line
             prepend-inner-icon="fas fa-search"
             hide-details
-            :value="filters.name"
             @input="filterName"
           />
-        </v-col> -->
+        </v-col>
       </v-row>
     </v-col>
   </v-row>
@@ -237,7 +236,7 @@ export default {
       filters: 'cabs/filters',
       globalFilters: 'adsmanager/filters'
     }),
-      
+
     activeFiltersCount() {
       let count = 0;
 
@@ -281,8 +280,8 @@ export default {
       this.nameSearchText = name;
       setTimeout(async () => {
         if (name === this.nameSearchText) {
-          await this.$store.dispatch('cabs/setSpecificFilter', {filter: 'name', data: name});
-        }  
+          await this.$store.dispatch('campaigns/setFiltersName', name);
+        }
       }, 500);
     },
   }

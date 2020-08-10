@@ -18,6 +18,9 @@ export default {
         JSON.parse(localStorage.getItem('adsmanager-campaigns-selected')) : [],
       filtered: [],
     },
+    filters: {
+      name: ''
+    },
     dialogs: {
       changeBudget: false,
       pause: false,
@@ -41,8 +44,25 @@ export default {
     ...mixinDialogMutations,
     ...mixinSetLoading,
 
-    FILTER: state => {
-      state.campaigns.filtered = state.campaigns.all;
+    SET_FILTERS_NAME: (state, payload) => {
+      state.filters.name = payload;
+    },
+
+    FILTER_CAMPAIGNS: (state) => {
+      const filters = state.filters;
+      const campaigns = state.campaigns;
+
+      campaigns.filtered = campaigns.all;
+
+      if (filters.name) {
+        if (filters.name.length > 0) {
+          campaigns.filtered = campaigns.all.filter(campaign => {
+            return (
+              campaign.name.toString().toLowerCase().search(filters.name.toLowerCase()) !== -1
+            );
+          });
+        }
+      }
     },
 
     SET_STAT: (state, stat) => {
@@ -65,6 +85,11 @@ export default {
   actions: {
     ...mixinDialogActions,
 
+    async setFiltersName(context, payload) {
+      context.commit('SET_FILTERS_NAME', payload);
+      context.commit('FILTER_CAMPAIGNS');
+    },
+
     async loadCampaigns({commit, rootState, dispatch}) {
       const data = {
         users_ids: rootState.users.users.selected.length > 0 ?
@@ -82,14 +107,14 @@ export default {
       };
 
       console.log(JSON.stringify(data));
-      
+
       const response = await this._vm.api.post('/campaigns', data);
       if (response.data.success) {
         response.data.data.forEach(campaign => {
           console.log(campaign.campaign_id);
         });
         commit('SET_ALL', response.data.data);
-        commit('FILTER');
+        commit('SET_FILTERED', response.data.data);
         dispatch('loadStat');
       }
     },
